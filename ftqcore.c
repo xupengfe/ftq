@@ -34,15 +34,17 @@ void *ftq_core(void *arg)
 	/* thread number, zero based. */
 	int thread_num = (uintptr_t) arg;
 	int i, offset;
-	int k;
 	ticks tickstart, ticknow, ticklast, tickend, tickinterval;
 	unsigned long done;
 	volatile unsigned long long count;
+	testcase_declare;
 
 	/* core # is thread # */
 	wireme(thread_num);
 
 	usleep(20000);
+
+	testcase_init();
 
 	if (set_realtime) {
 		int cores = get_num_cores();
@@ -72,11 +74,7 @@ void *ftq_core(void *arg)
 
 		for (ticknow = ticklast = getticks();
 			 ticknow < tickend; ticknow = getticks()) {
-			for (k = 0; k < ITERCOUNT; k++)
-				count++;
-			for (k = 0; k < (ITERCOUNT - 1); k++)
-				count--;
-
+			testcase_iter(&count);
 		}
 
 		samples[(done * 2) + offset] = ticklast;
@@ -104,10 +102,7 @@ void *ftq_core(void *arg)
 
 		for (ticknow = ticklast = getticks();
 			 ticknow < tickend; ticknow = getticks()) {
-			for (k = 0; k < ITERCOUNT; k++)
-				count++;
-			for (k = 0; k < (ITERCOUNT - 1); k++)
-				count--;
+			testcase_iter(&count);
 		}
 
 		samples[(done * 2) + offset] = ticklast;
@@ -122,6 +117,8 @@ void *ftq_core(void *arg)
 
 		tickend = tickstart + (done + 1) * tickinterval;
 	}
+
+	testcase_exit();
 
 	return NULL;
 }

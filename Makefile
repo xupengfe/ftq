@@ -5,7 +5,16 @@ ACFLAGS = -Wall -O2 -Dros
 LIBS =
 LDFLAGS = $(USER_OPT)
 
-all: linux
+linux_core = --include linux.h ftq.c ftqcore.c linux.c
+
+tests := $(patsubst tests/%.h,ftq_%,$(wildcard tests/*.h))
+
+all: tests
+
+tests: $(tests)
+
+$(tests): ftq_%: tests/%.h linux.h ftq.c ftqcore.c linux.c
+	$(CC) -o $@ $(CFLAGS) --include linux.h --include $< ftq.c ftqcore.c linux.c -lpthread -lrt
 
 linux:
 	cc $(CFLAGS) --include linux.h -Wall ftq.c ftqcore.c linux.c -o ftq.linux -lpthread -lrt
