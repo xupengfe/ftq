@@ -20,6 +20,7 @@ extern int hounds;
 extern int ignore_wire_failures;
 extern int set_realtime;
 extern double ticksperns;
+extern const char *test_argument;
 
 /* ftqcore.c */
 void *ftq_core(void *arg);

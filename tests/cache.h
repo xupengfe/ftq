@@ -1,19 +1,24 @@
 #include <sys/mman.h>
 
-#define CACHE_SIZE		(5UL * 1024 * 1024 / 2)
-#define CACHE_LENGTH		(CACHE_SIZE / sizeof(unsigned long))
+#define CACHE_SIZE		(1UL * 1024 * 1024)
+#define CACHE_LENGTH		(cache_size / sizeof(unsigned long))
 #define CACHE_STRIDE		(64 / sizeof(unsigned long))
 
 #define testcase_declare			\
-	unsigned long *cache_data
+	unsigned long *cache_data;		\
+	int cache_size = CACHE_SIZE
 
 #define testcase_init()							\
-	cache_data = mmap(NULL, CACHE_SIZE, PROT_READ | PROT_WRITE,	\
-			  MAP_PRIVATE | MAP_ANONYMOUS | MAP_POPULATE,	\
-			  -1, 0)
+	do {								\
+		if (test_argument)					\
+			cache_size = atoi(test_argument);		\
+		cache_data = mmap(NULL, cache_size, PROT_READ | PROT_WRITE, \
+				  MAP_PRIVATE | MAP_ANONYMOUS | MAP_POPULATE, \
+				  -1, 0);				\
+	} while (0)
 
 #define testcase_exit()				\
-	munmap(cache_data, CACHE_SIZE)
+	munmap(cache_data, cache_size)
 
 #define testcase_iter(pcount)						\
 	do {								\

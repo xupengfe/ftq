@@ -30,7 +30,7 @@ int set_realtime = 0;
 void usage(char *av0)
 {
 	fprintf(stderr,
-			"usage: %s [-t threads] [-n samples] [-f frequency] [-h] [-o outname] [-s] [-r] "
+			"usage: %s [-t threads] [-n samples] [-f frequency] [-h] [-o outname] [-s] [-r] [-a test-argument]"
 			"[-T ticks-per-ns-float] "
 			"[-w (ignore wire failures -- only do this if there is no option"
 			"\n",
@@ -86,10 +86,11 @@ int main(int argc, char **argv)
 			{"ticksperns", 0, 0, 'T'},
 			{"ignore_wire_failures", 0, 0, 'w'},
 			{"realtime", 0, 0, 'r'},
+			{"argument", 0, 0, 'a'},
 			{0, 0, 0, 0}
 		};
 
-		c = getopt_long(argc, argv, "n:hsf:o:t:T:wr", long_options,
+		c = getopt_long(argc, argv, "n:hsf:o:t:T:wra:", long_options,
 						&option_index);
 		if (c == -1)
 			break;
@@ -121,6 +122,9 @@ int main(int argc, char **argv)
 				break;
 			case 'r':
 				set_realtime = 1;
+				break;
+			case 'a':
+				test_argument = optarg;
 				break;
 			case 'h':
 			default:

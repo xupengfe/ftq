@@ -23,6 +23,7 @@ unsigned long numsamples = DEFAULT_COUNT;
 double ticksperns;
 int rt_free_cores = 2;
 int hounds = 0;
+const char *test_argument = NULL;
 
 /*************************************************************************
  * FTQ core: does the measurement                                        *
